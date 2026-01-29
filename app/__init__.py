@@ -9,6 +9,8 @@ from app.routes.reportRoutes import report_bp
 from app.routes.requestRoutes import request_bp
 from app.routes.dashboardRoutes import dashboard_bp
 from app.routes.driver_routes import driver_bp
+from app.routes.devRoutes import dev_bp
+
 
 
 def create_app():
@@ -71,6 +73,8 @@ def create_app():
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(driver_bp)
+    app.register_blueprint(dev_bp)
+
 
     # ---------------- DB INIT ----------------
     with app.app_context():
