@@ -12,7 +12,6 @@ from app.routes.driver_routes import driver_bp
 from app.routes.devRoutes import dev_bp
 
 
-
 def create_app():
     app = Flask(__name__)
 
@@ -35,19 +34,13 @@ def create_app():
     app.config["JWT_HEADER_TYPE"] = "Bearer"
     app.config["JWT_COOKIE_CSRF_PROTECT"] = False
 
-    # ---------------- CORS ----------------
+    # ---------------- 🔥 CORS (FINAL FIX) ----------------
+  
     CORS(
         app,
-        resources={
-            r"/*": {
-                "origins": [
-                    "http://localhost:5173",
-                    "http://127.0.0.1:5173",
-                ]
-            }
-        },
-        methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        resources={r"/*": {"origins": "*"}},
         allow_headers=["Content-Type", "Authorization"],
+        methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     )
 
     # ---------------- EXTENSIONS ----------------
@@ -61,10 +54,7 @@ def create_app():
 
     @app.route("/uploads/<path:filename>")
     def serve_uploaded_file(filename):
-        return send_from_directory(
-            app.config["UPLOAD_FOLDER"],
-            filename
-        )
+        return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
 
     # ---------------- BLUEPRINTS ----------------
     app.register_blueprint(auth_bp)
@@ -74,7 +64,6 @@ def create_app():
     app.register_blueprint(admin_bp)
     app.register_blueprint(driver_bp)
     app.register_blueprint(dev_bp)
-
 
     # ---------------- DB INIT ----------------
     with app.app_context():
