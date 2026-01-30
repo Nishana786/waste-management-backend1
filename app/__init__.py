@@ -9,7 +9,7 @@ from app.routes.reportRoutes import report_bp
 from app.routes.requestRoutes import request_bp
 from app.routes.dashboardRoutes import dashboard_bp
 from app.routes.driver_routes import driver_bp
-
+from app.utils.seed_admin import seed_admin   # ✅ ADD THIS
 
 
 def create_app():
@@ -21,21 +21,20 @@ def create_app():
     UPLOAD_FOLDER = os.path.join(ROOT_DIR, "uploads")
 
     # ---------------- APP CONFIG ----------------
-    app.config["SECRET_KEY"] = "secret123"
+    app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "secret123")
     app.config["SQLALCHEMY_DATABASE_URI"] = (
         "sqlite:///" + os.path.join(BASE_DIR, "waste.db")
     )
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     # ---------------- JWT CONFIG ----------------
-    app.config["JWT_SECRET_KEY"] = "jwt-secret-123"
+    app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "jwt-secret-123")
     app.config["JWT_TOKEN_LOCATION"] = ["headers"]
     app.config["JWT_HEADER_NAME"] = "Authorization"
     app.config["JWT_HEADER_TYPE"] = "Bearer"
     app.config["JWT_COOKIE_CSRF_PROTECT"] = False
 
-    # ---------------- 🔥 CORS (FINAL FIX) ----------------
-  
+    # ---------------- CORS ----------------
     CORS(
         app,
         resources={r"/*": {"origins": "*"}},
@@ -63,10 +62,10 @@ def create_app():
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(driver_bp)
-   
 
-    # ---------------- DB INIT ----------------
+    # ---------------- DB INIT + ADMIN SEED 🔥 ----------------
     with app.app_context():
         db.create_all()
+        seed_admin()   # 👑 REAL-WORLD ADMIN AUTO CREATE
 
     return app
