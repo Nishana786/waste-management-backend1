@@ -46,13 +46,14 @@ def create_app():
         return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
 
     # ---------------- BLUEPRINTS (IMPORTANT) ----------------
-  app.register_blueprint(auth_bp)
-
+       
+    app.register_blueprint(auth_bp)
     app.register_blueprint(report_bp)
     app.register_blueprint(request_bp)
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(driver_bp)
+
 
     # ---------------- DB INIT + ADMIN SEED ----------------
     with app.app_context():

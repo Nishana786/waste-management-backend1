@@ -46,7 +46,7 @@ def login():
     return jsonify(response), status
 
 # 👑 CREATE ADMIN  ✅ FIXED (bcrypt)
-@auth_bp.route("/create-admin", methods=["GET"])
+@auth_bp.route("/create-admin", methods=["post"])
 def create_admin():
     admin = User.query.filter_by(email="admin@gmail.com").first()
     if admin:
