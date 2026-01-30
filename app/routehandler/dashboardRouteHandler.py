@@ -48,13 +48,13 @@ class DashboardRouteHandler:
         ).filter(PickupRequest.status.in_(["completed", "rejected"])).all():
 
             msg = (
-                f"✅ Your pickup request on {p.date} has been completed"
+                f" Your pickup request on {p.date} has been completed"
                 if p.status == "completed"
-                else f"❌ Your pickup request on {p.date} was rejected"
+                else f" Your pickup request on {p.date} was rejected"
             )
             notifications.append(f"{msg} ({minutes_ago(p.updated_at)})")
 
-        # ✅ RETURN MUST be INSIDE function
+        #  RETURN MUST be INSIDE function
         return jsonify({
             "pendingReports": pending_reports,
             "pendingRequests": pending_pickups,
