@@ -3,7 +3,8 @@ from app.routehandler.userRouteHandler import UserRouteHandler
 from app.extensions import bcrypt, db
 from app.models.user import User
 
-auth_bp = Blueprint("auth", __name__)
+auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
+
 
 # 🔐 REGISTER USER
 @auth_bp.route("/register", methods=["POST"])
