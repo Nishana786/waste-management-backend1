@@ -91,3 +91,5 @@ def reject_request(request_id):
 @admin_required
 def delete_request(request_id):
     return AdminRouteHandler.delete_completed_request(request_id)
+
+ 
