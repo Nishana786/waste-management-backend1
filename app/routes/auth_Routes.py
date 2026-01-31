@@ -1,16 +1,27 @@
 from flask import Blueprint, request, jsonify
+from flask_cors import CORS
 from app.routehandler.userRouteHandler import UserRouteHandler
 from app.extensions import bcrypt, db
 from app.models.user import User
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
+# 🔥 ENABLE CORS FOR AUTH ROUTES
+CORS(auth_bp)
 
 # 🔐 REGISTER USER
 @auth_bp.route("/register", methods=["POST"])
 def register():
     data = request.get_json()
     response, status = UserRouteHandler.register_user(data)
+    return jsonify(response), status
+
+
+# 🔑 LOGIN USER
+@auth_bp.route("/login", methods=["POST"])
+def login():
+    data = request.get_json()
+    response, status = UserRouteHandler.login_user(data)
     return jsonify(response), status
 
 
@@ -40,14 +51,6 @@ def update_user(user_id):
 @auth_bp.route("/users/<int:user_id>", methods=["DELETE"])
 def delete_user(user_id):
     response, status = UserRouteHandler.delete_user(user_id)
-    return jsonify(response), status
-
-
-# 🔑 LOGIN
-@auth_bp.route("/login", methods=["POST"])
-def login():
-    data = request.get_json()
-    response, status = UserRouteHandler.login_user(data)
     return jsonify(response), status
 
 
