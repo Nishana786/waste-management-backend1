@@ -30,10 +30,16 @@ def create_app():
     app.config["JWT_HEADER_NAME"] = "Authorization"
     app.config["JWT_HEADER_TYPE"] = "Bearer"
 
-    # ---------------- CORS (🔥 FULL FIX) ----------------
+    # ---------------- ✅ CORS (FULL & CORRECT FIX) ----------------
     CORS(
         app,
-        resources={r"/*": {"origins": "*"}},
+        resources={
+            r"/*": {
+                "origins": [
+                    "https://waste-management-frontend-k2ba.vercel.app"
+                ]
+            }
+        },
         supports_credentials=True,
         allow_headers=["Content-Type", "Authorization"],
         methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
@@ -63,6 +69,6 @@ def create_app():
     # ---------------- DB INIT + ADMIN SEED ----------------
     with app.app_context():
         db.create_all()
-        seed_admin()  # 👑 auto-create admin (bcrypt)
+        seed_admin()
 
     return app
