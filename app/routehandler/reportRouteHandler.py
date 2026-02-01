@@ -1,6 +1,9 @@
 import os
+import uuid
 from flask import request, jsonify
 from flask_jwt_extended import get_jwt_identity
+from werkzeug.utils import secure_filename
+
 from app.models.report import Report
 from app.repository.reportRepository import ReportRepository
 
@@ -10,37 +13,37 @@ class ReportRouteHandler:
 
     @staticmethod
     def create_report():
-        # 🧪 DEBUG — remove later
-        print("AUTH:", request.headers.get("Authorization"))
-        print("USER:", get_jwt_identity())
-        print("FORM:", request.form)
-        print("FILES:", request.files)
 
-        # 🔐 logged-in user id
-        user_id = int(get_jwt_identity())
-
-
+        user_id = get_jwt_identity()
         if not user_id:
-            return jsonify({"message": "Invalid or missing token"}), 401
+            return jsonify({"message": "Unauthorized"}), 401
 
-        # 📷 photo validation (SAFE)
+        user_id = int(user_id)
+
+        # ✅ validate required form fields
+        issue_type = request.form.get("issueType")
+        location = request.form.get("location")
+
+        if not issue_type or not location:
+            return jsonify({"message": "issueType and location required"}), 400
+
+        # ✅ photo validation
         photo = request.files.get("photo")
         if not photo or photo.filename == "":
             return jsonify({"message": "Photo is required"}), 400
 
-        # 📁 ensure uploads folder
         os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-        # 🔥 safe filename (avoid overwrite)
-        filename = photo.filename
-        photo.save(os.path.join(UPLOAD_FOLDER, filename))
+        # ✅ secure + unique filename
+        filename = secure_filename(photo.filename)
+        unique_name = f"{uuid.uuid4()}_{filename}"
+        photo.save(os.path.join(UPLOAD_FOLDER, unique_name))
 
-        # 📝 create report
         report = Report(
-            issueType=request.form.get("issueType"),
+            issueType=issue_type,
             description=request.form.get("description"),
-            location=request.form.get("location"),
-            photo=filename,
+            location=location,
+            photo=unique_name,
             user_id=user_id
         )
 

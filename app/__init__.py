@@ -15,25 +15,22 @@ from app.utils.seed_admin import seed_admin
 def create_app():
     app = Flask(__name__)
 
-    # ---------------- PATHS ----------------
     BASE_DIR = os.path.abspath(os.path.dirname(__file__))
     ROOT_DIR = os.path.abspath(os.path.join(BASE_DIR, ".."))
     UPLOAD_FOLDER = os.path.join(ROOT_DIR, "uploads")
 
-    # ---------------- CONFIG ----------------
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "secret123")
-    app.config["SQLALCHEMY_DATABASE_URI"] = (
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv(
+        "DATABASE_URL",
         "sqlite:///" + os.path.join(BASE_DIR, "waste.db")
     )
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-    # ---------------- JWT ----------------
     app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "jwt-secret-123")
     app.config["JWT_TOKEN_LOCATION"] = ["headers"]
     app.config["JWT_HEADER_NAME"] = "Authorization"
     app.config["JWT_HEADER_TYPE"] = "Bearer"
 
-    # ---------------- ✅ CORS (PROFESSIONAL FIX) ----------------
     frontend_url = os.getenv(
         "FRONTEND_URL",
         "https://waste-management-frontend-kohl.vercel.app"
@@ -47,12 +44,10 @@ def create_app():
         methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
     )
 
-    # ---------------- EXTENSIONS ----------------
     db.init_app(app)
     bcrypt.init_app(app)
     jwt.init_app(app)
 
-    # ---------------- UPLOADS ----------------
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
     app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
@@ -60,7 +55,6 @@ def create_app():
     def serve_uploaded_file(filename):
         return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
 
-    # ---------------- BLUEPRINTS ----------------
     app.register_blueprint(auth_bp)
     app.register_blueprint(report_bp)
     app.register_blueprint(request_bp)
@@ -68,7 +62,6 @@ def create_app():
     app.register_blueprint(admin_bp)
     app.register_blueprint(driver_bp)
 
-    # ---------------- DB INIT + ADMIN SEED ----------------
     with app.app_context():
         db.create_all()
         seed_admin()

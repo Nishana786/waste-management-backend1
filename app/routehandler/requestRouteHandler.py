@@ -7,12 +7,21 @@ class RequestRouteHandler:
 
     @staticmethod
     def create_request():
-        user_id = int(get_jwt_identity())
+
+        user_id = get_jwt_identity()
+        if not user_id:
+            return jsonify({"message": "Unauthorized"}), 401
+
+        user_id = int(user_id)
 
         data = request.get_json()
-
         if not data:
             return jsonify({"message": "Invalid request"}), 400
+
+        required_fields = ["address", "wasteType", "date", "timeSlot", "phone"]
+        for field in required_fields:
+            if not data.get(field):
+                return jsonify({"message": f"{field} required"}), 400
 
         req = PickupRequest(
             address=data["address"],

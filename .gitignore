@@ -16,3 +16,13 @@ env/
 
 uploads/*
 !uploads/.gitkeep
+
+# Flask / Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Editor / OS
+.vscode/
+.DS_Store
+Thumbs.db
