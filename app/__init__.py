@@ -31,12 +31,16 @@ def create_app():
     app.config["JWT_HEADER_TYPE"] = "Bearer"
 
     # ---------------- ✅ CORS (FULL & CORRECT FIX) ----------------
-CORS(
-    app,
-    resources={r"/*": {"origins": "*"}},
-    allow_headers=["Content-Type", "Authorization"],
-    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
-)
+        # ---------------- ✅ CORS (FIXED) ----------------
+    CORS(
+        app,
+        resources={r"/*": {"origins": "*"}},
+        supports_credentials=True,
+        allow_headers=["Content-Type", "Authorization"],
+        methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+    )
+
+
 
 
     # ---------------- EXTENSIONS ----------------
