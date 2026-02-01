@@ -31,19 +31,14 @@ def create_app():
     app.config["JWT_HEADER_TYPE"] = "Bearer"
 
     # ---------------- ✅ CORS (FULL & CORRECT FIX) ----------------
-    CORS(
-        app,
-        resources={
-            r"/*": {
-                "origins": [
-                    "https://waste-management-frontend-k2ba.vercel.app"
-                ]
-            }
-        },
-        supports_credentials=True,
-        allow_headers=["Content-Type", "Authorization"],
-        methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
-    )
+   CORS(
+    app,
+    resources={r"/*": {"origins": "*"}},
+    supports_credentials=True,
+    allow_headers=["Content-Type", "Authorization"],
+    methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+)
+
 
     # ---------------- EXTENSIONS ----------------
     db.init_app(app)
