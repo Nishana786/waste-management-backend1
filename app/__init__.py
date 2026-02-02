@@ -1,5 +1,5 @@
 import os
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, request
 from flask_cors import CORS
 
 from app.extensions import db, bcrypt, jwt
@@ -19,6 +19,7 @@ def create_app():
     ROOT_DIR = os.path.abspath(os.path.join(BASE_DIR, ".."))
     UPLOAD_FOLDER = os.path.join(ROOT_DIR, "uploads")
 
+    # 🔐 BASIC CONFIG
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "secret123")
     app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv(
         "DATABASE_URL",
@@ -26,28 +27,44 @@ def create_app():
     )
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+    # 🔑 JWT CONFIG
     app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "jwt-secret-123")
     app.config["JWT_TOKEN_LOCATION"] = ["headers"]
     app.config["JWT_HEADER_NAME"] = "Authorization"
     app.config["JWT_HEADER_TYPE"] = "Bearer"
 
-    frontend_url = os.getenv(
-        "FRONTEND_URL",
-        "https://waste-management-frontend-kohl.vercel.app"
-    )
-
+    # ✅ GLOBAL CORS CONFIG (LOCAL + DEPLOY)
     CORS(
         app,
-        resources={r"/*": {"origins": frontend_url}},
+        resources={
+            r"/*": {
+                "origins": [
+                    "http://localhost:5173",
+                    "https://waste-management-frontend-kohl.vercel.app"
+                ]
+            }
+        },
         supports_credentials=True,
-        allow_headers=["Content-Type", "Authorization"],
+        allow_headers=["Authorization", "Content-Type"],
         methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
     )
 
+    # ✅ FORCE HANDLE PREFLIGHT (OPTIONS)
+    @app.before_request
+    def handle_preflight():
+        if request.method == "OPTIONS":
+            response = app.make_response("")
+            response.headers["Access-Control-Allow-Origin"] = request.headers.get("Origin")
+            response.headers["Access-Control-Allow-Headers"] = "Authorization, Content-Type"
+            response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+            return response
+
+    # 🔌 INIT EXTENSIONS
     db.init_app(app)
     bcrypt.init_app(app)
     jwt.init_app(app)
 
+    # 📂 UPLOADS
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
     app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
@@ -55,6 +72,7 @@ def create_app():
     def serve_uploaded_file(filename):
         return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
 
+    # 🔗 REGISTER ROUTES
     app.register_blueprint(auth_bp)
     app.register_blueprint(report_bp)
     app.register_blueprint(request_bp)
@@ -62,6 +80,7 @@ def create_app():
     app.register_blueprint(admin_bp)
     app.register_blueprint(driver_bp)
 
+    # 🧱 DB INIT + ADMIN SEED
     with app.app_context():
         db.create_all()
         seed_admin()
