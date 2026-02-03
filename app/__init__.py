@@ -2,8 +2,6 @@ import os
 from flask import Flask, send_from_directory
 from flask_cors import CORS
 
-
-
 from app.extensions import db, bcrypt, jwt
 from app.routes.auth_Routes import auth_bp
 from app.routes.adminRoutes import admin_bp
@@ -35,18 +33,10 @@ def create_app():
     app.config["JWT_HEADER_NAME"] = "Authorization"
     app.config["JWT_HEADER_TYPE"] = "Bearer"
 
-    # ✅ CORS CONFIG (FIXED)
+    # ✅ FINAL CORS CONFIG (NO MORE VERSEL URL ISSUES)
     CORS(
         app,
-        resources={
-            r"/*": {
-                "origins": [
-                    "http://localhost:5173",
-                    "https://waste-management-client-94k1.vercel.app"
-                ]
-            }
-        },
-        supports_credentials=True,
+        resources={r"/*": {"origins": "*"}},
         allow_headers=["Authorization", "Content-Type"],
         methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
     )
