@@ -20,30 +20,28 @@ class ReportRouteHandler:
 
         user_id = int(user_id)
 
-        # ✅ validate required form fields
         issue_type = request.form.get("issueType")
         location = request.form.get("location")
 
         if not issue_type or not location:
             return jsonify({"message": "issueType and location required"}), 400
 
-        # ✅ photo validation
         photo = request.files.get("photo")
         if not photo or photo.filename == "":
             return jsonify({"message": "Photo is required"}), 400
 
         os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-        # ✅ secure + unique filename
         filename = secure_filename(photo.filename)
         unique_name = f"{uuid.uuid4()}_{filename}"
         photo.save(os.path.join(UPLOAD_FOLDER, unique_name))
 
+        # ✅ CHANGE ONLY HERE
         report = Report(
             issueType=issue_type,
             description=request.form.get("description"),
             location=location,
-            photo=unique_name,
+            photo=f"{request.host_url}uploads/{unique_name}",
             user_id=user_id
         )
 

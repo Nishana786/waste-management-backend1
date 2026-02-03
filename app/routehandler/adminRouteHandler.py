@@ -55,6 +55,7 @@ class AdminRouteHandler:
     def approve_report(report_id):
         report = Report.query.get_or_404(report_id)
         report.status = "approved"
+        report.updated_at = datetime.utcnow()   # ✅ ADDED
         db.session.commit()
         return jsonify({"message": "Report approved"}), 200
 
@@ -63,6 +64,7 @@ class AdminRouteHandler:
     def complete_report(report_id):
         report = Report.query.get_or_404(report_id)
         report.status = "completed"
+        report.updated_at = datetime.utcnow()   # ✅ ADDED
         db.session.commit()
         return jsonify({"message": "Report completed"}), 200
 
@@ -71,6 +73,7 @@ class AdminRouteHandler:
     def reject_report(report_id):
         report = Report.query.get_or_404(report_id)
         report.status = "rejected"
+        report.updated_at = datetime.utcnow()   # ✅ ADDED
         db.session.commit()
         return jsonify({"message": "Report rejected"}), 200
 
@@ -107,6 +110,7 @@ class AdminRouteHandler:
     def approve_request(request_id):
         req = PickupRequest.query.get_or_404(request_id)
         req.status = "approved"
+        req.updated_at = datetime.utcnow()      # ✅ ADDED
         db.session.commit()
         return jsonify({"message": "Request approved"}), 200
 
@@ -115,6 +119,7 @@ class AdminRouteHandler:
     def complete_request(request_id):
         req = PickupRequest.query.get_or_404(request_id)
         req.status = "completed"
+        req.updated_at = datetime.utcnow()      # ✅ ADDED
         db.session.commit()
         return jsonify({"message": "Request completed"}), 200
 
@@ -123,6 +128,7 @@ class AdminRouteHandler:
     def reject_request(request_id):
         req = PickupRequest.query.get_or_404(request_id)
         req.status = "rejected"
+        req.updated_at = datetime.utcnow()      # ✅ ADDED
         db.session.commit()
         return jsonify({"message": "Request rejected"}), 200
 
