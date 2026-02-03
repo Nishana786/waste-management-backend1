@@ -41,7 +41,6 @@ def create_app():
                 "origins": [
                     "http://localhost:5173",
                     "https://waste-management-client-dshe.vercel.app"
-"
                 ]
             }
         },
