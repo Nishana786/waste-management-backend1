@@ -12,12 +12,12 @@ class RequestRepository:
     def count_pending(user_id):
         return PickupRequest.query.filter_by(
             user_id=user_id,
-            status="pending"   
+            status="pending"
         ).count()
 
     @staticmethod
     def count_completed(user_id):
         return PickupRequest.query.filter_by(
             user_id=user_id,
-            status="completed"  
+            status="completed"
         ).count()

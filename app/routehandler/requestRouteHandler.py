@@ -7,12 +7,9 @@ class RequestRouteHandler:
 
     @staticmethod
     def create_request():
-
         user_id = get_jwt_identity()
         if not user_id:
             return jsonify({"message": "Unauthorized"}), 401
-
-        user_id = int(user_id)
 
         data = request.get_json()
         if not data:
@@ -29,7 +26,8 @@ class RequestRouteHandler:
             date=data["date"],
             timeSlot=data["timeSlot"],
             phone=data["phone"],
-            user_id=user_id
+            user_id=int(user_id),
+            status="pending"
         )
 
         RequestRepository.save(req)
