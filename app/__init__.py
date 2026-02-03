@@ -1,5 +1,5 @@
 import os
-from flask import Flask, send_from_directory, request
+from flask import Flask, send_from_directory
 from flask_cors import CORS
 
 from app.extensions import db, bcrypt, jwt
@@ -33,14 +33,14 @@ def create_app():
     app.config["JWT_HEADER_NAME"] = "Authorization"
     app.config["JWT_HEADER_TYPE"] = "Bearer"
 
-    # ✅ GLOBAL CORS CONFIG (LOCAL + DEPLOY)
+    # ✅ CORS CONFIG (FIXED)
     CORS(
         app,
         resources={
             r"/*": {
                 "origins": [
                     "http://localhost:5173",
-                    "https://waste-management-frontend-kohl.vercel.app"
+                    "https://waste-management-client-alpha.vercel.app"
                 ]
             }
         },
@@ -48,16 +48,6 @@ def create_app():
         allow_headers=["Authorization", "Content-Type"],
         methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
     )
-
-    # ✅ FORCE HANDLE PREFLIGHT (OPTIONS)
-    @app.before_request
-    def handle_preflight():
-        if request.method == "OPTIONS":
-            response = app.make_response("")
-            response.headers["Access-Control-Allow-Origin"] = request.headers.get("Origin")
-            response.headers["Access-Control-Allow-Headers"] = "Authorization, Content-Type"
-            response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
-            return response
 
     # 🔌 INIT EXTENSIONS
     db.init_app(app)
