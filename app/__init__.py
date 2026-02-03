@@ -40,7 +40,8 @@ def create_app():
             r"/*": {
                 "origins": [
                     "http://localhost:5173",
-                    "https://waste-management-client-alpha.vercel.app"
+                    "https://waste-management-client-dshe.vercel.app"
+"
                 ]
             }
         },
