@@ -1,6 +1,6 @@
 import os
 from flask import Flask, send_from_directory
-from flask_cors import CORS
+
 
 from app.extensions import db, bcrypt, jwt
 from app.routes.auth_Routes import auth_bp
@@ -40,7 +40,7 @@ def create_app():
             r"/*": {
                 "origins": [
                     "http://localhost:5173",
-                    "https://waste-management-client-l4ir.vercel.app"
+                    "https://waste-management-client-94k1.vercel.app"
                 ]
             }
         },

@@ -1,9 +1,9 @@
 from flask import Blueprint, request, jsonify
-from flask_cors import CORS
+
 from app.routehandler.userRouteHandler import UserRouteHandler
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
-CORS(auth_bp)
+
 
 @auth_bp.route("/register", methods=["POST"])
 def register():

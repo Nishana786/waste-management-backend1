@@ -7,10 +7,7 @@ from app.repository.userRepository import UserRepository
 
 
 class UserRouteHandler:
-    """
-    🔹 Business Logic Layer
-    🔹 Routes ↔ Repository middle layer
-    """
+   
 
     # =====================================================
     # 🔐 REGISTER USER
