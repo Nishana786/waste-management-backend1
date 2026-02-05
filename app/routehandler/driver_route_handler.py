@@ -1,5 +1,6 @@
 from app.repository.driver_repository import DriverRepository
 
+
 class DriverRouteHandler:
 
     @staticmethod
@@ -16,8 +17,8 @@ class DriverRouteHandler:
 
     @staticmethod
     def complete_driver(driver_id):
-        return DriverRepository.mark_completed(driver_id)
+        DriverRepository.mark_completed(driver_id)
 
     @staticmethod
     def assign_driver(driver_id):
-        return DriverRepository.mark_assigned(driver_id)
+        DriverRepository.assign(driver_id)

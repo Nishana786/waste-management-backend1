@@ -10,7 +10,7 @@ def is_admin():
     return claims.get("role") == "admin"
 
 
-# ✅ ADD DRIVER (ADMIN ONLY)
+#  ADD DRIVER
 @driver_bp.route("/admin/drivers", methods=["POST"])
 @jwt_required()
 def add_driver():
@@ -21,7 +21,7 @@ def add_driver():
     return jsonify({"message": "Driver added", "id": driver.id}), 201
 
 
-# ✅ GET ALL DRIVERS (ADMIN ONLY)
+#  GET ALL DRIVERS
 @driver_bp.route("/admin/drivers", methods=["GET"])
 @jwt_required()
 def get_drivers():
@@ -41,18 +41,23 @@ def get_drivers():
     ]), 200
 
 
-# 🗑️ DELETE DRIVER (ADMIN ONLY)
+#  DELETE DRIVER 
 @driver_bp.route("/admin/drivers/<int:id>", methods=["DELETE"])
 @jwt_required()
 def delete_driver(id):
     if not is_admin():
         return jsonify({"message": "Admin only"}), 403
 
-    DriverRouteHandler.delete_driver(id)
-    return jsonify({"message": "Driver deleted"}), 200
+    try:
+        DriverRouteHandler.delete_driver(id)
+        return jsonify({"message": "Driver deleted"}), 200
+
+    except ValueError as e:
+        #  NO MORE 500 ERROR
+        return jsonify({"error": str(e)}), 409
 
 
-# ✅ MARK DRIVER COMPLETED
+#  MARK DRIVER COMPLETED
 @driver_bp.route("/admin/drivers/<int:id>/complete", methods=["PUT"])
 @jwt_required()
 def complete_driver(id):
@@ -62,6 +67,8 @@ def complete_driver(id):
     DriverRouteHandler.complete_driver(id)
     return jsonify({"message": "Driver marked completed"}), 200
 
+
+# ASSIGN DRIVER
 @driver_bp.route("/admin/drivers/<int:id>/assign", methods=["PUT"])
 @jwt_required()
 def assign_driver(id):
@@ -70,6 +77,3 @@ def assign_driver(id):
 
     DriverRouteHandler.assign_driver(id)
     return jsonify({"message": "Driver assigned"}), 200
-
-
-   

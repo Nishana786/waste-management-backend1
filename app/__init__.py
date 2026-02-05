@@ -19,7 +19,7 @@ def create_app():
     ROOT_DIR = os.path.abspath(os.path.join(BASE_DIR, ".."))
     UPLOAD_FOLDER = os.path.join(ROOT_DIR, "uploads")
 
-    # 🔐 BASIC CONFIG
+    # BASIC CONFIG
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "secret123")
     app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv(
         "DATABASE_URL",
@@ -27,13 +27,13 @@ def create_app():
     )
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-    # 🔑 JWT CONFIG
+    # JWT CONFIG
     app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "jwt-secret-123")
     app.config["JWT_TOKEN_LOCATION"] = ["headers"]
     app.config["JWT_HEADER_NAME"] = "Authorization"
     app.config["JWT_HEADER_TYPE"] = "Bearer"
 
-    # ✅ FINAL CORS CONFIG (NO MORE VERSEL URL ISSUES)
+    #  FINAL CORS CONFIG 
     CORS(
         app,
         resources={r"/*": {"origins": "*"}},
@@ -41,12 +41,12 @@ def create_app():
         methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
     )
 
-    # 🔌 INIT EXTENSIONS
+    #  INIT EXTENSIONS
     db.init_app(app)
     bcrypt.init_app(app)
     jwt.init_app(app)
 
-    # 📂 UPLOADS
+    # UPLOADS
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
     app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
@@ -62,7 +62,7 @@ def create_app():
     app.register_blueprint(admin_bp)
     app.register_blueprint(driver_bp)
 
-    # 🧱 DB INIT + ADMIN SEED
+    #  DB INIT + ADMIN SEED
     with app.app_context():
         db.create_all()
         seed_admin()

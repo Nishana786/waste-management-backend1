@@ -25,7 +25,7 @@ class UserRouteHandler:
         if existing_user:
             return {"message": "Email already exists"}, 400
 
-        # ✅ bcrypt HASH
+        
         hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
 
         UserRepository.create_user(
@@ -37,7 +37,7 @@ class UserRouteHandler:
         return {"message": "User registered successfully"}, 201
 
     # =====================================================
-    # 📥 GET ALL USERS
+    #  GET ALL USERS
     # =====================================================
     @staticmethod
     def get_all_users():
@@ -81,7 +81,7 @@ class UserRouteHandler:
 
         name = data.get("name")
         email = data.get("email")
-        role = data.get("role")  # admin/user update support
+        role = data.get("role") 
 
         UserRepository.update_user(
             user,
@@ -105,7 +105,7 @@ class UserRouteHandler:
         return {"message": "User deleted successfully"}, 200
 
        # =====================================================
-    # 🔐 LOGIN USER  ✅ FINAL FIX
+    # 🔐 LOGIN USER 
     # =====================================================
     @staticmethod
     def login_user(data):

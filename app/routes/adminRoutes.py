@@ -13,7 +13,6 @@ def admin_dashboard():
     return AdminRouteHandler.dashboard_stats()
 
 
-# ================= SYSTEM STATS =================
 @admin_bp.route("/admin/stats", methods=["GET", "OPTIONS"])
 @jwt_required()
 @admin_required
@@ -36,13 +35,6 @@ def approve_report(report_id):
     return AdminRouteHandler.approve_report(report_id)
 
 
-@admin_bp.route("/admin/reports/<int:report_id>/complete", methods=["PUT", "OPTIONS"])
-@jwt_required()
-@admin_required
-def complete_report(report_id):
-    return AdminRouteHandler.complete_report(report_id)
-
-
 @admin_bp.route("/admin/reports/<int:report_id>/reject", methods=["PUT", "OPTIONS"])
 @jwt_required()
 @admin_required
@@ -50,6 +42,21 @@ def reject_report(report_id):
     return AdminRouteHandler.reject_report(report_id)
 
 
+@admin_bp.route("/admin/reports/<int:report_id>/complete", methods=["PUT", "OPTIONS"])
+@jwt_required()
+@admin_required
+def complete_report(report_id):
+    return AdminRouteHandler.complete_report(report_id)
+
+
+@admin_bp.route("/admin/reports/<int:report_id>/assign-driver", methods=["PUT", "OPTIONS"])
+@jwt_required()
+@admin_required
+def assign_driver_to_report(report_id):
+    return AdminRouteHandler.assign_driver_to_report(report_id)
+
+
+# 🗑️ DELETE REPORT 
 @admin_bp.route("/admin/reports/<int:report_id>", methods=["DELETE", "OPTIONS"])
 @jwt_required()
 @admin_required
@@ -57,7 +64,7 @@ def delete_report(report_id):
     return AdminRouteHandler.delete_report(report_id)
 
 
-# ================= ADMIN PICKUP REQUESTS =================
+# ================= ADMIN REQUESTS =================
 @admin_bp.route("/admin/requests", methods=["GET", "OPTIONS"])
 @jwt_required()
 @admin_required
@@ -72,13 +79,6 @@ def approve_request(request_id):
     return AdminRouteHandler.approve_request(request_id)
 
 
-@admin_bp.route("/admin/requests/<int:request_id>/complete", methods=["PUT", "OPTIONS"])
-@jwt_required()
-@admin_required
-def complete_request(request_id):
-    return AdminRouteHandler.complete_request(request_id)
-
-
 @admin_bp.route("/admin/requests/<int:request_id>/reject", methods=["PUT", "OPTIONS"])
 @jwt_required()
 @admin_required
@@ -86,6 +86,21 @@ def reject_request(request_id):
     return AdminRouteHandler.reject_request(request_id)
 
 
+@admin_bp.route("/admin/requests/<int:request_id>/complete", methods=["PUT", "OPTIONS"])
+@jwt_required()
+@admin_required
+def complete_request(request_id):
+    return AdminRouteHandler.complete_request(request_id)
+
+
+@admin_bp.route("/admin/requests/<int:request_id>/assign-driver", methods=["PUT", "OPTIONS"])
+@jwt_required()
+@admin_required
+def assign_driver_to_request(request_id):
+    return AdminRouteHandler.assign_driver_to_request(request_id)
+
+
+# 🗑️ DELETE REQUEST
 @admin_bp.route("/admin/requests/<int:request_id>", methods=["DELETE", "OPTIONS"])
 @jwt_required()
 @admin_required

@@ -17,8 +17,13 @@ class DriverRepository:
     @staticmethod
     def delete(driver_id):
         driver = Driver.query.get_or_404(driver_id)
+
+        if driver.reports or driver.pickups:
+           raise ValueError("Driver has assigned tasks")
+
         db.session.delete(driver)
         db.session.commit()
+    
 
     @staticmethod
     def mark_completed(driver_id):

@@ -18,10 +18,8 @@ class DashboardRouteHandler:
 
     @staticmethod
     def get_stats(user_id):
-        """
-        user_id route-il ninnu varum
-        JWT ivide use cheyyilla
-        """
+        
+        
 
         user_id = int(user_id)
 
@@ -60,7 +58,7 @@ class DashboardRouteHandler:
             r.notification_sent = True
             r.updated_at = datetime.utcnow()
 
-        # 🔔 PICKUP notifications (completed / rejected)
+        # PICKUP notifications (completed / rejected)
         pickups = PickupRequest.query.filter_by(
             user_id=user_id,
             notification_sent=False
@@ -82,10 +80,10 @@ class DashboardRouteHandler:
             p.notification_sent = True
             p.updated_at = datetime.utcnow()
 
-        # 💾 save all updates
+        #  save all updates
         db.session.commit()
 
-        # 📦 response data
+        # response data
         return {
             "pendingReports": pending_reports,
             "pendingRequests": pending_pickups,
